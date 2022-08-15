@@ -1,9 +1,7 @@
-from django.urls import path, re_path
-from .views import LockerAPI
+from rest_framework import routers
+from .views import LockerViewSet
 
-urlpatterns = [
-    path('lockers/', LockerAPI.as_view())
-]
+router = routers.SimpleRouter()
+router.register('lockers', LockerViewSet)
 
-# 33.450701, 126.570667
-# latitude, longitude
+urlpatterns = router.urls
