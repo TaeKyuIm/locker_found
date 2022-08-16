@@ -32,12 +32,7 @@ class RegisterUserSerializer(serializers.ModelSerializer):
         return CustomUser.objects.create_user(**validated_data)
 
     
-    def update(self, instance, validated_data):
-        instance.nickname = validated_data.get('nickname', instance.nickname)
-        instance.username = validated_data.get('username', instance.username)
-        instance.password = validated_data.get('password', instance.password)
-        instance.save()
-        return instance
+
 
 
 
@@ -90,4 +85,29 @@ class LogoutSerializer(serializers.Serializer):
             self.fail('bad_token')
 
 
+# class ChangePasswordSerializer(serializers.ModelSerializer):
+    
+#     old_password = serializers.CharField(max_length=68, write_only=True, required=True)
+#     new_password = serializers.CharField(max_length=68, write_only=True, required=True, validators=[validate_password])
+#     new_password2 = serializers.CharField(max_length=68, write_only=True, required=True)
+    
 
+#     class Meta:
+#         model = CustomUser
+#         fields = ('old_password', 'new_password', 'new_password2')
+
+#     def validate(self, instance):
+#         if instance['new_password'] != instance['new_password2']:
+#             raise serializers.ValidationError({"password": "Password fields didn't match."})
+
+#         return instance
+
+
+class ChangePasswordSerializer(serializers.Serializer):
+    model = CustomUser
+
+    """
+    Serializer for password change endpoint.
+    """
+    old_password = serializers.CharField(required=True)
+    new_password = serializers.CharField(required=True)
