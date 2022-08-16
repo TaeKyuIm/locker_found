@@ -104,10 +104,16 @@ class LogoutSerializer(serializers.Serializer):
 
 
 class ChangePasswordSerializer(serializers.Serializer):
+    
     model = CustomUser
 
-    """
-    Serializer for password change endpoint.
-    """
     old_password = serializers.CharField(required=True)
-    new_password = serializers.CharField(required=True)
+    new_password = serializers.CharField(max_length=68, write_only=True, required=True)
+    new_password2 = serializers.CharField(max_length=68, write_only=True, required=True)
+
+    
+    def validate(self, instance):
+        if instance['new_password'] != instance['new_password2']:
+            raise serializers.ValidationError({"password": "Password fields didn't match."})
+
+        return instance
