@@ -22,3 +22,13 @@ class Locker(models.Model):
 
     def __str__(self):
         return self.location
+    
+    
+class MeMo(models.Model):
+    locker = models.ForeignKey(Locker, related_name="locker", on_delete=models.CASCADE, blank=True, null=True)
+    number = models.IntegerField(blank=False, null=False)
+    password = models.CharField(max_length=30, blank=False, null=False)
+    usage_time = models.DateTimeField(auto_now_add=True, blank=True, null=True)
+    
+    def __str__(self):
+        return self.locker
