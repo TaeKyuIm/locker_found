@@ -1,5 +1,6 @@
 from django.db import models
 from django.core.validators import MinValueValidator, MaxValueValidator
+from users.models import CustomUser
 
 class Locker(models.Model):
     location = models.CharField(max_length=50)
@@ -25,10 +26,13 @@ class Locker(models.Model):
     
     
 class MeMo(models.Model):
+    author = models.ForeignKey(CustomUser, on_delete=models.CASCADE, related_name='memos', null=True) 
     locker = models.ForeignKey(Locker, related_name="locker", on_delete=models.CASCADE, blank=True, null=True)
     number = models.IntegerField(blank=False, null=False)
     password = models.CharField(max_length=30, blank=False, null=False)
     usage_time = models.DateTimeField(auto_now_add=True, blank=True, null=True)
     
+    
+
     def __str__(self):
         return self.locker
