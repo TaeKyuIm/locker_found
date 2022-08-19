@@ -4,6 +4,9 @@ from django.contrib import auth
 from rest_framework.exceptions import AuthenticationFailed
 from django.contrib.auth.password_validation import validate_password
 from rest_framework_simplejwt.tokens import RefreshToken, TokenError
+from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
+from rest_framework.response import Response
+from rest_framework import status
 
 class RegisterUserSerializer(serializers.ModelSerializer):
 
@@ -19,7 +22,7 @@ class RegisterUserSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = CustomUser
-        fields = ('nickname', 'username', 'password', 'password2')
+        fields = ('nickname', 'username', 'password', 'password2','tokens')
     
     def validate(self, instance):
         if instance['password'] != instance['password2']:
@@ -54,10 +57,24 @@ class LoginSerializer(serializers.ModelSerializer):
             raise AuthenticationFailed('Invalid credentials, try again')
         
 
+        # token = TokenObtainPairSerializer.get_token(user)
+        # refresh_token = str(token)
+        
+
+        # res = Response({"refresh": refresh_token}, status=status.HTTP_200_OK)
+
+        # res.set_cookie("refresh", refresh_token, httponly=True)
+        
+        # return {
+        #     'username' : user.username,
+        #     'nickname' : user.nickname,
+        #     'refresh' : refresh_token
+        # }
+      
         return {
             'username' : user.username,
             'nickname' : user.nickname,
-            'tokens' : user.tokens
+            'tokens' : user.tokens #refresh token
         }
         
 
@@ -80,24 +97,6 @@ class LogoutSerializer(serializers.Serializer):
 
         except TokenError:
             self.fail('bad_token')
-
-
-# class ChangePasswordSerializer(serializers.ModelSerializer):
-    
-#     old_password = serializers.CharField(max_length=68, write_only=True, required=True)
-#     new_password = serializers.CharField(max_length=68, write_only=True, required=True, validators=[validate_password])
-#     new_password2 = serializers.CharField(max_length=68, write_only=True, required=True)
-    
-
-#     class Meta:
-#         model = CustomUser
-#         fields = ('old_password', 'new_password', 'new_password2')
-
-#     def validate(self, instance):
-#         if instance['new_password'] != instance['new_password2']:
-#             raise serializers.ValidationError({"password": "Password fields didn't match."})
-
-#         return instance
 
 
 class ChangePasswordSerializer(serializers.Serializer):
