@@ -12,3 +12,10 @@ class MemoSerializer(serializers.ModelSerializer):
     class Meta:
         model = MeMo
         fields = '__all__'
+        
+        
+class FavoriteSerializer(serializers.ModelSerializer):
+    locker = LockerSerializer(many=True, read_only=True)
+    class Meta:
+        model = MeMo
+        fields = '__all__'
