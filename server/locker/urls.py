@@ -7,6 +7,7 @@ app_name = "locker"
 router = DefaultRouter()
 router.register(r'lockers', views.LockerViewSet)
 router.register(r'memo', views.MemoViewSet)
+router.register(r'favorites', views.FavoriteViewSet)
 
 urlpatterns = router.urls
 
